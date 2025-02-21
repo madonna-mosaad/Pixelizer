@@ -1,0 +1,29 @@
+Pixelizer/
+│
+├── main.py
+│
+├── app/
+│   ├── controller.py
+│   │
+│   ├── processing/
+│   │   ├── image_processing.py
+│   │   ├── histogram.py
+│   │   ├── thresholding.py
+│   │   └── hybrid_image.py
+│   │
+│   ├── design/
+│   │   ├── tools/
+│   │   │   ├── design_tools.py
+│   │   │
+│   │   ├── ui/
+│   │   │   ├── design.ui
+│   │   │
+│   │   └── design.py
+│   │
+│   └── utils/
+│       └── clean_cache.py
+│
+└── static/
+    └── images/
+        ├── icon.png
+        └── logo.png
