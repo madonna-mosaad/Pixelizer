@@ -217,11 +217,12 @@ class Ui_MainWindow(object):
         self.page_noise_layout = QtWidgets.QVBoxLayout(self.page_noise_controls)
         self.page_noise_layout.setSpacing(10)
 
-        self.setupNoiseWidgets()
         # Add noise widgets to page_noise_layout
         # plus a "Back" button at the bottom
-        self.page_noise_layout.addWidget(self.noise_mode_button)
         self.page_noise_layout.addWidget(self.back_button)
+        self.page_noise_layout.addWidget(self.noise_mode_button)
+
+        self.setupNoiseWidgets()
 
         self.sidebar_stacked.addWidget(self.page_noise_controls)
 
