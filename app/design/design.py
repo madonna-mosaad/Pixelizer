@@ -292,7 +292,7 @@ class Ui_MainWindow(object):
         self.page_noise_layout.addLayout(mean_slider_layout)
 
         # This second label was "Mean" in your original code
-        stddev_label = createLabel("Mean", "Color:white;", isVisible=True)
+        stddev_label = createLabel("Standard Deviation", "Color:white;", isVisible=True)
         self.page_noise_layout.addWidget(stddev_label)
 
         (self.stddev_gaussian_noise_slider,
