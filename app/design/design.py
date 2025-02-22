@@ -264,6 +264,7 @@ class Ui_MainWindow(object):
             self.show_fourier_filter_options_button,
             self.upload_hybrid_image_button
         ]
+        self.kernal_sizes_array = ["3×3", "4×4", "5×5"]
 
     def setupNoiseWidgets(self):
         """
@@ -333,7 +334,6 @@ class Ui_MainWindow(object):
         back_button = createButton("Back", self.button_style, self.show_main_buttons)
         self.page_filter_layout.addWidget(back_button)
 
-        self.kernal_sizes_array = ["3×3", "4×4", "5×5"]
         kernal_size_label = createLabel("Kernal Size", isHead=True)
         self.page_filter_layout.addWidget(kernal_size_label)
         self.filter_kernal_size_button = createButton(self.kernal_sizes_array[0], self.button_style, lambda: self.toggle_kernal_size(self.filter_kernal_size_button))
