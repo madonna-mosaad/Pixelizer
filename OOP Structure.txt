@@ -13,10 +13,10 @@ Pixelizer/
 │   │
 │   ├── design/
 │   │   ├── tools/
-│   │   │   ├── design_tools.py
+│   │   │   └── design_tools.py
 │   │   │
 │   │   ├── ui/
-│   │   │   ├── design.ui
+│   │   │   └── design.ui
 │   │   │
 │   │   └── design.py
 │   │
@@ -28,5 +28,4 @@ Pixelizer/
 │
 └── static/
     └── images/
-        ├── icon.png
-        └── logo.png
+        └── icon.png
