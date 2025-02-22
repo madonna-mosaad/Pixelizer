@@ -4,6 +4,7 @@ from app.design.tools.design_tools import (
     createGroupBox,
     createSlider,
     createLabel,
+    createSpinBox,
     adjust_quit_button
 )
 
@@ -219,9 +220,6 @@ class Ui_MainWindow(object):
 
         # Add noise widgets to page_noise_layout
         # plus a "Back" button at the bottom
-        self.page_noise_layout.addWidget(self.back_button)
-        self.page_noise_layout.addWidget(self.noise_mode_button)
-
         self.setupNoiseWidgets()
 
         self.sidebar_stacked.addWidget(self.page_noise_controls)
@@ -248,7 +246,6 @@ class Ui_MainWindow(object):
 
         # "Back" button used on the Noise page
         self.back_button = createButton("Back", self.button_style, self.show_main_buttons)
-        self.noise_mode_button = createButton("Uniform Noise", self.button_style, self.toggle_noise_mode)
 
         # We'll store these main buttons in a list if you need to show/hide them
         self.MAIN_BUTTONS = [
@@ -267,6 +264,12 @@ class Ui_MainWindow(object):
         """
         Creates the noise widgets (labels, sliders) and places them in page_noise_layout.
         """
+
+        # Noise Mode
+        self.page_noise_layout.addWidget(self.back_button)
+        self.noise_mode_button = createButton("Uniform Noise", self.button_style, self.toggle_noise_mode)
+        self.page_noise_layout.addWidget(self.noise_mode_button)
+
         # Uniform Noise
         uniform_title = createLabel("Uniform Noise", "Color:white;", isVisible=True, isHead=True)
         self.page_noise_layout.addWidget(uniform_title)
@@ -276,7 +279,7 @@ class Ui_MainWindow(object):
 
         (self.uniform_noise_slider,
          uniform_slider_label,
-         uniform_slider_layout) = createSlider(style=self.slider_style, isVisible=True)
+         uniform_slider_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(uniform_slider_layout)
 
         # Gaussian Noise
@@ -288,7 +291,7 @@ class Ui_MainWindow(object):
 
         (self.mean_gaussian_noise_slider,
          mean_slider_label,
-         mean_slider_layout) = createSlider(style=self.slider_style, isVisible=True)
+         mean_slider_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(mean_slider_layout)
 
         # This second label was "Mean" in your original code
@@ -297,7 +300,7 @@ class Ui_MainWindow(object):
 
         (self.stddev_gaussian_noise_slider,
          stddev_val_label,
-         stddev_layout) = createSlider(style=self.slider_style, isVisible=True)
+         stddev_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(stddev_layout)
 
         # Salt & Pepper Noise
@@ -309,7 +312,7 @@ class Ui_MainWindow(object):
 
         (self.salt_pepper_noise_slider,
          uniform_slider_label,
-         uniform_slider_layout) = createSlider(style=self.slider_style, isVisible=True)
+         uniform_slider_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(uniform_slider_layout)
 
     def toggle_noise_mode(self):

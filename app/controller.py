@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets
-from app.design.design import Ui_MainWindow
 from app.utils.clean_cache import remove_directories
+from app.design.design import Ui_MainWindow
+# from app.tests.design_test import Ui_MainWindow
 
 
 class MainWindowController:
