@@ -54,12 +54,13 @@ def createSlider(min_value=0, max_value=100, initial_value=50, unit=None, style=
     slider.setMinimum(min_value)
     slider.setMaximum(max_value)
     slider.setValue(initial_value)
-    slider.setMaximumWidth(180)
+    slider.setMaximumSize(180, 50)
 
     # Create the label
     unit_text = unit if unit is not None else ""
     label = QtWidgets.QLabel(f"{initial_value}{unit_text}")
-    label.setMinimumWidth(20)
+    label.setMinimumWidth(25)
+    label.setMaximumHeight(50)
     label.setStyleSheet("color:white;")
 
     # Function to update the label based on the slider's value
@@ -161,14 +162,16 @@ def createLabel(text, style=None, isVisible=True, isHead=False):
     font = QtGui.QFont()
     if isHead:
         font.setPointSize(24)  # Larger size for headings
+        current_height = 80
         font.setBold(True)  # Bold for headings
         font.setItalic(False)  # Usually, headings are not italicized
     else:
         font.setPointSize(16)  # Smaller size for body text
+        current_height = 20
         font.setBold(False)  # Not bold for body text
         font.setItalic(True)  # Italicize body text if needed
-
     label.setFont(font)
+    label.setMaximumHeight(current_height)
 
     # Apply the provided style or a default style if no style is provided
     if style:

@@ -126,7 +126,8 @@ class Ui_MainWindow(object):
 
         self.title_label = createLabel(
             text="Pixelizing",
-            style="color:white; padding:10px; padding-left:0;"
+            style="color:white; padding:10px; padding-left:0;",
+            isHead=True
         )
         font = QtGui.QFont()
         font.setPointSize(30)
@@ -219,10 +220,17 @@ class Ui_MainWindow(object):
         self.page_noise_layout.setSpacing(10)
 
         # Add noise widgets to page_noise_layout
-        # plus a "Back" button at the bottom
         self.setupNoiseWidgets()
-
         self.sidebar_stacked.addWidget(self.page_noise_controls)
+
+        # PAGE 2: Filter Controls
+        self.page_filter_controls = QtWidgets.QWidget()
+        self.page_filter_layout = QtWidgets.QVBoxLayout(self.page_filter_controls)
+        self.page_filter_layout.setSpacing(10)
+
+        # Add noise widgets to page_noise_layout
+        self.setupFilterWidgets()
+        self.sidebar_stacked.addWidget(self.page_filter_controls)
 
         # By default, show page 0
         self.sidebar_stacked.setCurrentIndex(0)
@@ -235,7 +243,7 @@ class Ui_MainWindow(object):
         self.show_noise_options_button = createButton(
             "Noise", self.button_style, self.show_noise_controls
         )
-        self.show_filter_options_button = createButton("Filters", self.button_style)
+        self.show_filter_options_button = createButton("Filters", self.button_style, self.show_filter_controls)
         self.show_edge_detecting_options_button = createButton("Edge Detector", self.button_style)
         self.show_metrics_button = createButton("View Metrics", self.button_style)
         self.show_refine_options_button = createButton("Refine Image", self.button_style)
@@ -246,6 +254,9 @@ class Ui_MainWindow(object):
 
         # "Back" button used on the Noise page
         self.back_button = createButton("Back", self.button_style, self.show_main_buttons)
+        self.kernal_sizes_array = ["3×3", "4×4", "5×5"]
+        self.kernal_size_label = createLabel("Kernal Size", isHead=True)
+        self.kernal_size_button = createButton(self.kernal_sizes_array[0], self.button_style, self.toggle_kernal_size)
 
         # We'll store these main buttons in a list if you need to show/hide them
         self.MAIN_BUTTONS = [
@@ -264,9 +275,9 @@ class Ui_MainWindow(object):
         """
         Creates the noise widgets (labels, sliders) and places them in page_noise_layout.
         """
-
         # Noise Mode
-        self.page_noise_layout.addWidget(self.back_button)
+        mode_title = createLabel("Current Mode", isHead=True)
+        self.page_noise_layout.addWidget(mode_title)
         self.noise_mode_button = createButton("Uniform Noise", self.button_style, self.toggle_noise_mode)
         self.page_noise_layout.addWidget(self.noise_mode_button)
 
@@ -315,6 +326,31 @@ class Ui_MainWindow(object):
          uniform_slider_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(uniform_slider_layout)
 
+    def setupFilterWidgets(self):
+        """
+        Creates the noise widgets (labels, sliders) and places them in page_noise_layout.
+        """
+        average_filter_title = createLabel("Average Filter", "color:white;", isVisible=True, isHead=True)
+        self.page_filter_layout.addWidget(average_filter_title)
+        self.average_filter_button = createButton("Apply", self.button_style)
+        self.page_filter_layout.addWidget(self.average_filter_button)
+
+        gaussian_filter_title = createLabel("Gaussian Filter", "color:white;", isVisible=True, isHead=True)
+        self.page_filter_layout.addWidget(gaussian_filter_title)
+        gaussian_filter_sigma_label = createLabel("Sigma - σ", "Color:white;", isVisible=True)
+        self.page_filter_layout.addWidget(gaussian_filter_sigma_label)
+        (self.gaussian_filter_sigma_slider,
+         uniform_slider_label,
+         uniform_slider_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
+        self.page_filter_layout.addLayout(uniform_slider_layout)
+        self.gaussian_filter_apply_button = createButton("Apply", self.button_style)
+        self.page_filter_layout.addWidget(self.gaussian_filter_apply_button)
+
+        median_filter_title = createLabel("Median Filter", "color:white;", isVisible=True, isHead=True)
+        self.page_filter_layout.addWidget(median_filter_title)
+        self.median_filter_button = createButton("Apply", self.button_style)
+        self.page_filter_layout.addWidget(self.median_filter_button)
+
     def toggle_noise_mode(self):
         if self.noise_mode_button.text() == "Uniform Noise":
             self.noise_mode_button.setText("Gaussian Noise")
@@ -322,6 +358,22 @@ class Ui_MainWindow(object):
             self.noise_mode_button.setText("Salt & Pepper Noise")
         else:
             self.noise_mode_button.setText("Uniform Noise")
+
+    def toggle_kernal_size(self):
+        """
+        Cycles through predefined kernel sizes and updates the button text to reflect the current selection.
+        """
+        # Get the current text of the button
+        current_text = self.kernal_size_button.text()
+
+        # Find the index of the current text in the kernel sizes array
+        current_index = self.kernal_sizes_array.index(current_text)
+
+        # Compute the next index; wrap around to the beginning if necessary
+        next_index = (current_index + 1) % len(self.kernal_sizes_array)
+
+        # Update the button text to the next kernel size
+        self.kernal_size_button.setText(self.kernal_sizes_array[next_index])
 
     def setupImageGroupBoxes(self):
         """Creates two group boxes: Original Image & Processed Image."""
@@ -353,3 +405,13 @@ class Ui_MainWindow(object):
     def show_noise_controls(self):
         """Switch QStackedWidget to page 1 (noise controls)."""
         self.sidebar_stacked.setCurrentIndex(1)
+        self.add_widget(self.page_noise_layout, [self.back_button])
+
+    def show_filter_controls(self):
+        """Switch QStackedWidget to page 1 (noise controls)."""
+        self.sidebar_stacked.setCurrentIndex(2)
+        self.add_widget(self.page_filter_layout, [self.kernal_size_label, self.kernal_size_button, self.back_button])
+
+    def add_widget(self, layout, widgets):
+        for widget in widgets:
+            layout.addWidget(widget)

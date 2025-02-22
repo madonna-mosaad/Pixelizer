@@ -113,7 +113,6 @@ class Ui_MainWindow(object):
             }
         """
 
-
     # ----------------------------------------------------------------------
     # Title + Navbar
     # ----------------------------------------------------------------------
@@ -220,10 +219,17 @@ class Ui_MainWindow(object):
         self.page_noise_layout.setSpacing(10)
 
         # Add noise widgets to page_noise_layout
-        # plus a "Back" button at the bottom
         self.setupNoiseWidgets()
-
         self.sidebar_stacked.addWidget(self.page_noise_controls)
+
+        # PAGE 2: Filter Controls
+        self.page_filter_controls = QtWidgets.QWidget()
+        self.page_filter_layout = QtWidgets.QVBoxLayout(self.page_filter_controls)
+        self.page_filter_layout.setSpacing(10)
+
+        # Add noise widgets to page_noise_layout
+        self.setupFilterWidgets()
+        self.sidebar_stacked.addWidget(self.page_filter_controls)
 
         # By default, show page 0
         self.sidebar_stacked.setCurrentIndex(0)
@@ -236,7 +242,7 @@ class Ui_MainWindow(object):
         self.show_noise_options_button = createButton(
             "Noise", self.button_style, self.show_noise_controls
         )
-        self.show_filter_options_button = createButton("Filters", self.button_style)
+        self.show_filter_options_button = createButton("Filters", self.button_style, self.show_filter_controls)
         self.show_edge_detecting_options_button = createButton("Edge Detector", self.button_style)
         self.show_metrics_button = createButton("View Metrics", self.button_style)
         self.show_refine_options_button = createButton("Refine Image", self.button_style)
@@ -267,7 +273,6 @@ class Ui_MainWindow(object):
         """
 
         # Noise Mode
-        self.page_noise_layout.addWidget(self.back_button)
         self.noise_mode_button = createButton("Uniform Noise", self.button_style, self.toggle_noise_mode)
         self.page_noise_layout.addWidget(self.noise_mode_button)
 
@@ -280,7 +285,7 @@ class Ui_MainWindow(object):
 
         (self.uniform_noise_slider,
          uniform_slider_label,
-         uniform_slider_layout) = createSlider(unit="%",style=self.slider_style, isVisible=True)
+         uniform_slider_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(uniform_slider_layout)
 
         # Gaussian Noise
@@ -292,7 +297,7 @@ class Ui_MainWindow(object):
 
         (self.mean_gaussian_noise_slider,
          mean_slider_label,
-         mean_slider_layout) = createSlider(unit="%",style=self.slider_style, isVisible=True)
+         mean_slider_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(mean_slider_layout)
 
         # This second label was "Mean" in your original code
@@ -301,7 +306,7 @@ class Ui_MainWindow(object):
 
         (self.stddev_gaussian_noise_slider,
          stddev_val_label,
-         stddev_layout) = createSlider(unit="%",style=self.slider_style, isVisible=True)
+         stddev_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(stddev_layout)
 
         # Salt & Pepper Noise
@@ -313,8 +318,16 @@ class Ui_MainWindow(object):
 
         (self.salt_pepper_noise_slider,
          uniform_slider_label,
-         uniform_slider_layout) = createSlider(unit="%",style=self.slider_style, isVisible=True)
+         uniform_slider_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(uniform_slider_layout)
+
+    def setupFilterWidgets(self):
+        """
+        Creates the noise widgets (labels, sliders) and places them in page_noise_layout.
+        """
+
+        pass
+        # Noise Mode
 
     def toggle_noise_mode(self):
         if self.noise_mode_button.text() == "Uniform Noise":
@@ -353,4 +366,10 @@ class Ui_MainWindow(object):
 
     def show_noise_controls(self):
         """Switch QStackedWidget to page 1 (noise controls)."""
+        self.page_noise_layout.addWidget(self.back_button)
         self.sidebar_stacked.setCurrentIndex(1)
+
+    def show_filter_controls(self):
+        """Switch QStackedWidget to page 1 (noise controls)."""
+        self.sidebar_stacked.setCurrentIndex(2)
+        self.page_filter_layout.addWidget(self.back_button)
