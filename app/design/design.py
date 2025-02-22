@@ -388,12 +388,12 @@ class Ui_MainWindow(object):
         """Creates two group boxes: Original Image & Processed Image."""
         self.original_groupBox = createGroupBox(
             title="Original Image",
-            size=QtCore.QSize(500, 525),
+            size=QtCore.QSize(502, 526),
             style=self.groupbox_style
         )
         self.processed_groupBox = createGroupBox(
             title="Processed Image",
-            size=QtCore.QSize(500, 525),
+            size=QtCore.QSize(502, 526),
             style=self.groupbox_style
         )
 
