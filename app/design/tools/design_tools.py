@@ -59,6 +59,7 @@ def createSlider(min_value=0, max_value=100, initial_value=50, style=False, isVi
     # Create the label
     label = QtWidgets.QLabel(f"{initial_value}%")
     label.setMinimumWidth(20)
+    label.setStyleSheet("color:white;")
 
     # Function to update the label based on the slider's value
     def updateLabel(value):
