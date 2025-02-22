@@ -120,7 +120,7 @@ class Ui_MainWindow(object):
         """Creates the title icon & label in a horizontal layout."""
         self.title_icon = QtWidgets.QLabel()
         self.title_icon.setMaximumSize(QtCore.QSize(80, 80))
-        self.title_icon.setPixmap(QtGui.QPixmap("static/images/icon.png"))
+        self.title_icon.setPixmap(QtGui.QPixmap("static/icons/icon.png"))
         self.title_icon.setScaledContents(True)
         self.title_icon.setObjectName("title_icon")
 
@@ -388,12 +388,12 @@ class Ui_MainWindow(object):
         """Creates two group boxes: Original Image & Processed Image."""
         self.original_groupBox = createGroupBox(
             title="Original Image",
-            size=QtCore.QSize(500, 510),
+            size=QtCore.QSize(500, 525),
             style=self.groupbox_style
         )
         self.processed_groupBox = createGroupBox(
             title="Processed Image",
-            size=QtCore.QSize(500, 510),
+            size=QtCore.QSize(500, 525),
             style=self.groupbox_style
         )
 
