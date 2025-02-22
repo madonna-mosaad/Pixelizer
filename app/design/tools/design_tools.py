@@ -43,7 +43,7 @@ def createGroupBox(title, size, style):
     return groupBox
 
 
-def createSlider(min_value=0, max_value=100, initial_value=50, style=False, isVisible=True):
+def createSlider(min_value=0, max_value=100, initial_value=50, unit=None, style=False, isVisible=True):
     # Create a horizontal layout for the slider and label
     slider_layout = QtWidgets.QHBoxLayout()
     slider_layout.setContentsMargins(0, 0, 0, 0)
@@ -57,7 +57,8 @@ def createSlider(min_value=0, max_value=100, initial_value=50, style=False, isVi
     slider.setMaximumWidth(180)
 
     # Create the label
-    label = QtWidgets.QLabel(f"{initial_value}%")
+    unit_text = unit if unit is not None else ""
+    label = QtWidgets.QLabel(f"{initial_value}{unit_text}")
     label.setMinimumWidth(20)
     label.setStyleSheet("color:white;")
 
@@ -79,6 +80,65 @@ def createSlider(min_value=0, max_value=100, initial_value=50, style=False, isVi
     slider_layout.addWidget(label)
 
     return slider, label, slider_layout
+
+
+def createSpinBox(min_value=0, max_value=100, initial_value=50, unit=None, style=False, isVisible=True):
+    """
+    Create a QSpinBox with a label that shows its value, optionally with a unit.
+
+    Args:
+    min_value (int): Minimum value of the spinbox.
+    max_value (int): Maximum value of the spinbox.
+    initial_value (int): Initial value of the spinbox.
+    unit (str, optional): Unit to display next to the spinbox value. Defaults to None.
+    style (str, optional): CSS style for the spinbox.
+    isVisible (bool, optional): Whether the spinbox should be visible initially.
+
+    Returns:
+    QSpinBox, QLabel, QHBoxLayout: The created spinbox, label, and their layout.
+    """
+    # Create a horizontal layout for the spinbox and label
+    spinbox_layout = QtWidgets.QHBoxLayout()
+    spinbox_layout.setContentsMargins(0, 0, 0, 0)
+    spinbox_layout.setSpacing(10)
+
+    # Create the spinbox
+    spinbox = QtWidgets.QSpinBox()
+    spinbox.setMinimum(min_value)
+    spinbox.setMaximum(max_value)
+    spinbox.setValue(initial_value)
+    spinbox.setMinimumWidth(180)
+    spinbox.setMaximumWidth(180)
+
+    # Create the label with or without a unit
+    unit_text = unit if unit is not None else ""
+    label = QtWidgets.QLabel(f"{initial_value}{unit_text}")
+    label.setMinimumWidth(30)
+    label.setStyleSheet("color: white;")
+
+    # Function to update the label based on the spinbox's value
+    def updateLabel(value):
+        label.setText(f"{value}{unit_text}")
+
+    # Connect the spinbox's valueChanged signal to update the label
+    spinbox.valueChanged.connect(updateLabel)
+
+    # Apply style if provided
+    if style:
+        spinbox.setStyleSheet(style)
+    else:
+        spinbox.setStyleSheet("color:white")
+
+    # Control visibility
+    if not isVisible:
+        spinbox.hide()
+        label.hide()
+
+    # Add the spinbox and label to the horizontal layout
+    spinbox_layout.addWidget(spinbox)
+    spinbox_layout.addWidget(label)
+
+    return spinbox, label, spinbox_layout
 
 
 def createLabel(text, style=None, isVisible=True, isHead=False):
