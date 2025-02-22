@@ -20,6 +20,9 @@ Pixelizer/
 │   │   │
 │   │   └── design.py
 │   │
+│   ├── services/
+│   │   └── image_service.py
+│   │
 │   ├── tests/
 │   │   └── design_test.py
 │   │
@@ -27,5 +30,11 @@ Pixelizer/
 │       └── clean_cache.py
 │
 └── static/
+    ├── icons/
+    │   └── icon.png
+    │
     └── images/
-        └── icon.png
+        ├── image01
+        ├── image02
+        ├── image03
+        └── image04
