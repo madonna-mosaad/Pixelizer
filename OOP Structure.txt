@@ -20,6 +20,9 @@ Pixelizer/
 │   │   │
 │   │   └── design.py
 │   │
+│   ├── tests/
+│   │   └── design_test.py
+│   │
 │   └── utils/
 │       └── clean_cache.py
 │
