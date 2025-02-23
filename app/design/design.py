@@ -232,6 +232,33 @@ class Ui_MainWindow(object):
         self.setupFilterWidgets()
         self.sidebar_stacked.addWidget(self.page_filter_controls)
 
+        # PAGE 3: Edge Detection Controls
+        self.page_edge_detection_controls = QtWidgets.QWidget()
+        self.page_edge_detection_layout = QtWidgets.QVBoxLayout(self.page_edge_detection_controls)
+        self.page_edge_detection_layout.setSpacing(10)
+
+        # Add noise widgets to page_noise_layout
+        self.setupEdgeDetectionWidgets()
+        self.sidebar_stacked.addWidget(self.page_edge_detection_controls)
+
+        # PAGE 4: Refine Image Controls
+        self.page_refine_image_controls = QtWidgets.QWidget()
+        self.page_refine_image_layout = QtWidgets.QVBoxLayout(self.page_refine_image_controls)
+        self.page_refine_image_layout.setSpacing(10)
+
+        # Add noise widgets to page_noise_layout
+        self.setupRefineImageWidgets()
+        self.sidebar_stacked.addWidget(self.page_refine_image_controls)
+
+        # PAGE 5: Fourier Filter Controls
+        self.page_fourier_filter_controls = QtWidgets.QWidget()
+        self.page_fourier_filter_layout = QtWidgets.QVBoxLayout(self.page_fourier_filter_controls)
+        self.page_fourier_filter_layout.setSpacing(10)
+
+        # Add noise widgets to page_noise_layout
+        self.setupFourierFilterWidgets()
+        self.sidebar_stacked.addWidget(self.page_fourier_filter_controls)
+
         # By default, show page 0
         self.sidebar_stacked.setCurrentIndex(0)
 
@@ -244,12 +271,12 @@ class Ui_MainWindow(object):
             "Noise", self.button_style, self.show_noise_controls
         )
         self.show_filter_options_button = createButton("Filters", self.button_style, self.show_filter_controls)
-        self.show_edge_detecting_options_button = createButton("Edge Detector", self.button_style)
+        self.show_edge_detecting_options_button = createButton("Edge Detector", self.button_style, self.show_edge_detection_controls)
         self.show_metrics_button = createButton("View Metrics", self.button_style)
-        self.show_refine_options_button = createButton("Refine Image", self.button_style)
+        self.show_refine_options_button = createButton("Refine Image", self.button_style, self.show_refine_image_controls)
         self.show_threshold_options_button = createButton("Thresholding", self.button_style)
         self.grayscaling_button = createButton("Gray Scaling", self.button_style)
-        self.show_fourier_filter_options_button = createButton("Fourier Filters", self.button_style)
+        self.show_fourier_filter_options_button = createButton("Fourier Filters", self.button_style, self.show_fourier_filter_controls)
         self.upload_hybrid_image_button = createButton("Hybrid Image", self.button_style)
 
         # We'll store these main buttons in a list if you need to show/hide them
@@ -360,6 +387,111 @@ class Ui_MainWindow(object):
         self.median_filter_button = createButton("Apply", self.button_style)
         self.page_filter_layout.addWidget(self.median_filter_button)
 
+    def setupEdgeDetectionWidgets(self):
+        """
+        Creates the noise widgets (labels, sliders) and places them in page_noise_layout.
+        """
+        back_button = createButton("Back", self.button_style, self.show_main_buttons)
+        self.page_edge_detection_layout.addWidget(back_button)
+
+        # =========================================================================================================
+        sobel_label = createLabel("Sobel Edge", isHead=True)
+        self.page_edge_detection_layout.addWidget(sobel_label)
+        self.sobel_edge_detection_button = createButton("Apply", self.button_style)
+        self.page_edge_detection_layout.addWidget(self.sobel_edge_detection_button)
+
+        # =========================================================================================================
+        roberts_label = createLabel("Roberts Edge", isHead=True)
+        self.page_edge_detection_layout.addWidget(roberts_label)
+        self.roberts_edge_detection_button = createButton("Apply", self.button_style)
+        self.page_edge_detection_layout.addWidget(self.roberts_edge_detection_button)
+
+        # =========================================================================================================
+        canny_label = createLabel("Canny Edge", isHead=True)
+        self.page_edge_detection_layout.addWidget(canny_label)
+
+        high_threshold_label = createLabel("High Threshold")
+        self.page_edge_detection_layout.addWidget(high_threshold_label)
+
+        (self.edge_detection_high_threshold_spinbox,
+         edge_detection_high_threshold_label,
+         edge_detection_high_threshold_layout) = createSpinBox(0, 100, 50)
+        self.page_edge_detection_layout.addLayout(edge_detection_high_threshold_layout)
+        self.edge_detection_high_threshold_spinbox.valueChanged.connect(self.update_low_threshold)
+
+        low_threshold_label = createLabel("Low Threshold")
+        self.page_edge_detection_layout.addWidget(low_threshold_label)
+
+        (self.edge_detection_low_threshold_spinbox,
+         edge_detection_low_threshold_label,
+         edge_detection_low_threshold_layout) = createSpinBox(0, 100, 50)
+
+        self.page_edge_detection_layout.addLayout(edge_detection_low_threshold_layout)
+        self.edge_detection_low_threshold_spinbox.valueChanged.connect(self.update_high_threshold)
+
+        self.canny_edge_detection_button = createButton("Apply", self.button_style)
+        self.page_edge_detection_layout.addWidget(self.canny_edge_detection_button)
+
+        # =========================================================================================================
+        prewitt_label = createLabel("Prewitt Edge", isHead=True)
+        self.page_edge_detection_layout.addWidget(prewitt_label)
+        self.prewitt_edge_detection_button = createButton("Apply", self.button_style)
+        self.page_edge_detection_layout.addWidget(self.prewitt_edge_detection_button)
+
+    def setupRefineImageWidgets(self):
+        """
+        Creates the noise widgets (labels, sliders) and places them in page_noise_layout.
+        """
+        back_button = createButton("Back", self.button_style, self.show_main_buttons)
+        self.page_refine_image_layout.addWidget(back_button)
+
+        # =========================================================================================================
+        normalize_label = createLabel("Normalize", isHead=True)
+        self.page_refine_image_layout.addWidget(normalize_label)
+        self.normalize_image_button = createButton("Apply", self.button_style)
+        self.page_refine_image_layout.addWidget(self.normalize_image_button)
+
+        # =========================================================================================================
+        equalize_label = createLabel("Equalize", isHead=True)
+        self.page_refine_image_layout.addWidget(equalize_label)
+        self.equalize_image_button = createButton("Apply", self.button_style)
+        self.page_refine_image_layout.addWidget(self.equalize_image_button)
+
+        # =========================================================================================================
+        label01 = createLabel("", isHead=True)
+        self.page_refine_image_layout.addWidget(label01)
+        label02 = createLabel("", isHead=True)
+        self.page_refine_image_layout.addWidget(label02)
+
+
+    def setupFourierFilterWidgets(self):
+        """
+        Creates the noise widgets (labels, sliders) and places them in page_noise_layout.
+        """
+        back_button = createButton("Back", self.button_style, self.show_main_buttons)
+        self.page_fourier_filter_layout.addWidget(back_button)
+
+        # =========================================================================================================
+        pass_filter_label = createLabel("Current Pass Filter", isHead=True)
+        self.page_fourier_filter_layout.addWidget(pass_filter_label)
+        self.pass_filter_button = createButton("High Pass Filter", self.button_style, self.toggle_pass_filter)
+        self.page_fourier_filter_layout.addWidget(self.pass_filter_button)
+
+        # =========================================================================================================
+        raduis_control_title = createLabel("Raduis Control", isHead=True)
+        self.page_fourier_filter_layout.addWidget(raduis_control_title)
+        (self.raduis_control_slider,
+         raduis_control_label,
+         raduis_control_layout) = createSlider(0, 100, 50, "%", self.slider_style, )
+        self.page_fourier_filter_layout.addLayout(raduis_control_layout)
+
+        label01 = createLabel("", isHead=True)
+        self.page_fourier_filter_layout.addWidget(label01)
+        label02 = createLabel("", isHead=True)
+        self.page_fourier_filter_layout.addWidget(label02)
+        label03 = createLabel("", isHead=True)
+        self.page_fourier_filter_layout.addWidget(label03)
+
     def toggle_noise_mode(self):
         if self.noise_mode_button.text() == "Uniform Noise":
             self.noise_mode_button.setText("Gaussian Noise")
@@ -384,6 +516,10 @@ class Ui_MainWindow(object):
         # Update the button text to the next kernel size
         kernal_button.setText(self.kernal_sizes_array[next_index])
 
+    def toggle_pass_filter(self):
+        text = "Low Pass Filter" if self.pass_filter_button.text() == "High Pass Filter" else "High Pass Filter"
+        self.pass_filter_button.setText(text)
+
     def setupImageGroupBoxes(self):
         """Creates two group boxes: Original Image & Processed Image."""
         self.original_groupBox = createGroupBox(
@@ -396,6 +532,24 @@ class Ui_MainWindow(object):
             size=QtCore.QSize(502, 526),
             style=self.groupbox_style
         )
+
+    def update_high_threshold(self, low_threshold_value):
+        """
+        Adjusts the high threshold based on changes in the low threshold to ensure it's always higher.
+        """
+        high_threshold_value = self.edge_detection_high_threshold_spinbox.value()
+        if low_threshold_value >= high_threshold_value:
+            new_high_value = low_threshold_value + 1
+            self.edge_detection_high_threshold_spinbox.setValue(min(new_high_value, self.edge_detection_high_threshold_spinbox.maximum()))
+
+    def update_low_threshold(self, high_threshold_value):
+        """
+        Adjusts the low threshold based on changes in the high threshold to ensure it's always lower.
+        """
+        low_threshold_value = self.edge_detection_low_threshold_spinbox.value()
+        if high_threshold_value <= low_threshold_value:
+            new_low_value = high_threshold_value - 1
+            self.edge_detection_low_threshold_spinbox.setValue(max(new_low_value, self.edge_detection_low_threshold_spinbox.minimum()))
 
     # ----------------------------------------------------------------------
     # Retranslate
@@ -418,3 +572,13 @@ class Ui_MainWindow(object):
     def show_filter_controls(self):
         """Switch QStackedWidget to page 1 (noise controls)."""
         self.sidebar_stacked.setCurrentIndex(2)
+
+    def show_edge_detection_controls(self):
+        """Switch QStackedWidget to page 1 (noise controls)."""
+        self.sidebar_stacked.setCurrentIndex(3)
+
+    def show_refine_image_controls(self):
+        self.sidebar_stacked.setCurrentIndex(4)
+
+    def show_fourier_filter_controls(self):
+        self.sidebar_stacked.setCurrentIndex(5)
