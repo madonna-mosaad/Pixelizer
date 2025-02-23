@@ -15,7 +15,8 @@ class MainWindowController:
         self.MainWindow = QtWidgets.QMainWindow()
 
         self.path=None
-        self.image=None
+        self.original_image=None
+        self.processed_image=None
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self.MainWindow)
@@ -34,11 +35,16 @@ class MainWindowController:
         """Connect buttons to their respective methods."""
         self.ui.quit_app_button.clicked.connect(self.closeApp)
         self.ui.upload_button.clicked.connect(self.drawImage)
-        self.ui.sobel_edge_detection_button.clicked.connect(lambda: self.edge.apply_sobel(self.image))
+        self.ui.sobel_edge_detection_button.clicked.connect(self.controller_apply_sobel)
+
+    def controller_apply_sobel(self):
+        self.processed_image=self.edge.apply_sobel(self.original_image)
+        ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.path)
+
 
     def drawImage(self):
         self.path = ImageServices.upload_image_file()
-        self.image = cv2.imread(self.path, cv2.IMREAD_GRAYSCALE)
+        self.original_image = cv2.imread(self.path, cv2.IMREAD_GRAYSCALE)
 
         # If user cancels file selection, path could be None
         if self.path:
