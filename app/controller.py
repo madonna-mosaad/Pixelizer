@@ -8,7 +8,6 @@ import cv2
 
 # from app.tests.design_test import Ui_MainWindow
 
-
 class MainWindowController:
     def __init__(self):
         self.app = QtWidgets.QApplication([])

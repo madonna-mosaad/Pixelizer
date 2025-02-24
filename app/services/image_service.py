@@ -1,7 +1,7 @@
 import os
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
-
+from app.services.image_histogram import ImageHistogram
 
 class ImageServices:
     last_opened_folder = "static/images"
@@ -24,6 +24,8 @@ class ImageServices:
             # If a file is selected, update the last opened folder and return the file path
             if file_path:
                 cls.last_opened_folder = os.path.dirname(file_path)
+                # Show histogram in a pop-up window
+                ImageHistogram.show_histogram_popup(file_path)
                 return file_path
             else:
                 print("No file was selected.")
