@@ -371,9 +371,9 @@ class Ui_MainWindow(object):
         self.page_filter_layout.addWidget(gaussian_filter_title)
         gaussian_filter_sigma_label = self.util.createLabel("Sigma - σ", "Color:white;", isVisible=True)
         self.page_filter_layout.addWidget(gaussian_filter_sigma_label)
-        (self.gaussian_filter_sigma_slider,
+        (self.gaussian_filter_sigma_spinbox,
          uniform_slider_label,
-         uniform_slider_layout) = self.util.createSlider(unit="%", style=self.slider_style, isVisible=True)
+         uniform_slider_layout) = self.util.createSpinBox(0, 10, 1)
         self.page_filter_layout.addLayout(uniform_slider_layout)
         self.gaussian_filter_apply_button = self.util.createButton("Apply", self.button_style)
         self.page_filter_layout.addWidget(self.gaussian_filter_apply_button)
