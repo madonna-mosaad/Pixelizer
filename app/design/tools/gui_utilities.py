@@ -64,11 +64,11 @@ class GUIUtilities:
 
     def addGraphView(self, group_box):
         plot_widget = pg.PlotWidget()
-        plot_widget.setBackground('#001e1e')
         plot_widget.showGrid(x=True, y=True, alpha=0.3)
 
         graph_layout = QtWidgets.QVBoxLayout()
         graph_layout.addWidget(plot_widget)
+        graph_layout.setContentsMargins(5, 25, 5, 5)
         group_box.setLayout(graph_layout)
         return plot_widget
 
