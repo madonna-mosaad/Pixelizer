@@ -1,5 +1,4 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-import sys
 from app.design.tools.gui_utilities import GUIUtilities
 
 
@@ -22,26 +21,24 @@ class Ui_PopWindow:
             }
         """
 
-    def setupUi(self, MainWindow):
+    def setupUi(self, Dialog):
         screen = QtWidgets.QApplication.primaryScreen().size()
         width = int(screen.width() * 0.75)  # 75% of the screen width
         height = int(screen.height() * 0.9)  # 90% of the screen height
 
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(width, height)
-        MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)  # Frameless window
-        MainWindow.setStyleSheet("background-color: #040d12;")
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(width, height)
+        Dialog.setWindowFlags(QtCore.Qt.FramelessWindowHint)  # Frameless window
+        Dialog.setStyleSheet("background-color: rgb(10, 10, 10);")
 
         # Calculate center position
-        centerX = (screen.width() - width) // 2 + 20
-        centerY = (screen.height() - height) // 2 - 20
-        MainWindow.move(centerX, centerY)  # Move window to center
+        centerX = (screen.width() - width) // 2
+        centerY = (screen.height() - height) // 2
+        Dialog.move(centerX, centerY)  # Move window to center
 
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
-        self.mainLayout = QtWidgets.QVBoxLayout(self.centralwidget)
-        self.mainLayout.setContentsMargins(20, 20, 20, 20)
-        self.mainLayout.setSpacing(20)
+        self.layout = QtWidgets.QVBoxLayout(Dialog)  # Set layout on QDialog directly
+        self.layout.setContentsMargins(20, 20, 20, 20)
+        self.layout.setSpacing(20)
 
         group_box_style = "color: white; border: 1px solid white;"
 
@@ -51,7 +48,7 @@ class Ui_PopWindow:
             group_box_style,
             isGraph=True
         )
-        self.mainLayout.addWidget(self.histogram_groupBox)
+        self.layout.addWidget(self.histogram_groupBox)
 
         self.distribution_groupBox, self.distribution_plot_widget = self.util.createGroupBox(
             "Distribution Curve",
@@ -59,38 +56,19 @@ class Ui_PopWindow:
             group_box_style,
             isGraph=True
         )
-        self.mainLayout.addWidget(self.distribution_groupBox)
+        self.layout.addWidget(self.distribution_groupBox)
 
-        self.upload_button = self.util.createButton("Back", self.button_style)
-        self.upload_button.clicked.connect(MainWindow.close)  # Connect the button to close the window
+        self.close_button = self.util.createButton("Close", self.button_style)
+        self.close_button.clicked.connect(Dialog.accept)  # Close the dialog on button click
 
         self.buttonLayout = QtWidgets.QHBoxLayout()
         self.buttonLayout.addStretch(1)
-        self.buttonLayout.addWidget(self.upload_button)
+        self.buttonLayout.addWidget(self.close_button)
         self.buttonLayout.addStretch(1)
-        self.mainLayout.addLayout(self.buttonLayout)
-
-        MainWindow.setCentralWidget(self.centralwidget)
-
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Metrics Popup"))
-        self.upload_button.setText(_translate("MainWindow", "Back"))
-        self.histogram_groupBox.setTitle(_translate("MainWindow", "Histogram"))
-        self.distribution_groupBox.setTitle(_translate("MainWindow", "Distribution Curve"))
+        self.layout.addLayout(self.buttonLayout)
 
     def show_popup(self):
-        """ Method to show the pop-up window. """
-        self.app = QtWidgets.QApplication(sys.argv)
-        self.MainWindow = QtWidgets.QMainWindow()
-        self.setupUi(self.MainWindow)
-        self.MainWindow.show()
-        sys.exit(self.app.exec_())
-
-
-if __name__ == "__main__":
-    ui = Ui_PopWindow()
-    ui.show_popup()
+        """ Method to show the pop-up window as a modal dialog. """
+        self.Dialog = QtWidgets.QDialog()
+        self.setupUi(self.Dialog)
+        self.Dialog.exec_()

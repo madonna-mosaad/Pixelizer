@@ -44,7 +44,8 @@ class MainWindowController:
         self.ui.prewitt_edge_detection_button.clicked.connect(self.controller_apply_prewitt)
         self.ui.canny_edge_detection_button.clicked.connect(self.controller_apply_canny)
 
-        self.ui.show_metrics_button.clicked.connect(lambda: ImageHistogram.show_histogram_popup(self.path))
+        # self.ui.show_metrics_button.clicked.connect(lambda: ImageHistogram.show_histogram_popup(self.path))
+        self.ui.show_metrics_button.clicked.connect(self.ui.popup.show_popup)
 
     def controller_apply_sobel(self):
         if self.original_image is None:
