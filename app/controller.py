@@ -35,9 +35,56 @@ class MainWindowController:
         self.ui.quit_app_button.clicked.connect(self.closeApp)
         self.ui.upload_button.clicked.connect(self.drawImage)
         self.ui.sobel_edge_detection_button.clicked.connect(self.controller_apply_sobel)
+        self.ui.roberts_edge_detection_button.clicked.connect(self.controller_apply_roberts)
+        self.ui.prewitt_edge_detection_button.clicked.connect(self.controller_apply_prewitt)
+        self.ui.canny_edge_detection_button.clicked.connect(self.controller_apply_canny)
 
     def controller_apply_sobel(self):
+        if self.original_image is None:
+            print("No image loaded. Please upload an image first.")
+            return  # Prevents crashing
         self.processed_image=self.edge.apply_sobel(self.original_image)
+        if self.processed_image is None:
+            print("Error: Processed image is None.")
+            return  # Prevents crashing
+        ImageServices.clear_image(self.ui.processed_groupBox)
+        ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
+
+    def controller_apply_roberts(self):
+        if self.original_image is None:
+            print("No image loaded. Please upload an image first.")
+            return  # Prevents crashing
+        self.processed_image=self.edge.apply_roberts(self.original_image)
+        if self.processed_image is None:
+            print("Error: Processed image is None.")
+            return  # Prevents crashing
+        ImageServices.clear_image(self.ui.processed_groupBox)
+        ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
+
+    def controller_apply_prewitt(self):
+        if self.original_image is None:
+            print("No image loaded. Please upload an image first.")
+            return  # Prevents crashing
+        self.processed_image=self.edge.apply_prewitt(self.original_image)
+        if self.processed_image is None:
+            print("Error: Processed image is None.")
+            return  # Prevents crashing
+        ImageServices.clear_image(self.ui.processed_groupBox)
+        ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
+
+    def controller_apply_canny(self):
+        if self.original_image is None:
+            print("No image loaded. Please upload an image first.")
+            return  # Prevents crashing
+        
+        low=self.ui.edge_detection_low_threshold_spinbox.value()
+        high=self.ui.edge_detection_high_threshold_spinbox.value()
+        self.processed_image=self.edge.apply_canny(self.original_image,low,high)
+
+        if self.processed_image is None:
+            print("Error: Processed image is None.")
+            return  # Prevents crashing
+        ImageServices.clear_image(self.ui.processed_groupBox)
         ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
 
 
@@ -48,6 +95,7 @@ class MainWindowController:
         # If user cancels file selection, path could be None
         if self.path:
             ImageServices.clear_image(self.ui.original_groupBox)
+            ImageServices.clear_image(self.ui.processed_groupBox)
             ImageServices.set_image_in_groupbox(self.ui.original_groupBox, self.original_image)
 
     def closeApp(self):
