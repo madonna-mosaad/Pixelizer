@@ -16,9 +16,7 @@ Pixelizer/
 │   │   │   └── gui_utilities.py
 │   │   │
 │   │   ├── ui/
-│   │   │   │
 │   │   │   ├── metrics_graphs.ui
-│   │   │   │
 │   │   │   └── main_layout.ui
 │   │   │
 │   │   ├── metrics_graphs.py
