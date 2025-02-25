@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from app.design.tools.design_tools import (
+from app.design.tools.gui_utilities import (
     createButton,
     createGroupBox,
     createSlider,
