@@ -3,19 +3,19 @@ from app.utils.clean_cache import remove_directories
 from app.services.image_service import ImageServices
 from app.design.design import Ui_MainWindow
 from app.processing.EdgeDetection import EdgeDetection
+from app.services.image_histogram import ImageHistogram
+
 import cv2
 
-
-# from app.tests.design_test import Ui_MainWindow
 
 class MainWindowController:
     def __init__(self):
         self.app = QtWidgets.QApplication([])
         self.MainWindow = QtWidgets.QMainWindow()
 
-        self.path=None
-        self.original_image=None
-        self.processed_image=None
+        self.path = None
+        self.original_image = None
+        self.processed_image = None
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self.MainWindow)
@@ -39,11 +39,13 @@ class MainWindowController:
         self.ui.prewitt_edge_detection_button.clicked.connect(self.controller_apply_prewitt)
         self.ui.canny_edge_detection_button.clicked.connect(self.controller_apply_canny)
 
+        self.ui.show_metrics_button.clicked.connect(lambda: ImageHistogram.show_histogram_popup(self.path))
+
     def controller_apply_sobel(self):
         if self.original_image is None:
             print("No image loaded. Please upload an image first.")
             return  # Prevents crashing
-        self.processed_image=self.edge.apply_sobel(self.original_image)
+        self.processed_image = self.edge.apply_sobel(self.original_image)
         if self.processed_image is None:
             print("Error: Processed image is None.")
             return  # Prevents crashing
@@ -54,7 +56,7 @@ class MainWindowController:
         if self.original_image is None:
             print("No image loaded. Please upload an image first.")
             return  # Prevents crashing
-        self.processed_image=self.edge.apply_roberts(self.original_image)
+        self.processed_image = self.edge.apply_roberts(self.original_image)
         if self.processed_image is None:
             print("Error: Processed image is None.")
             return  # Prevents crashing
@@ -65,7 +67,7 @@ class MainWindowController:
         if self.original_image is None:
             print("No image loaded. Please upload an image first.")
             return  # Prevents crashing
-        self.processed_image=self.edge.apply_prewitt(self.original_image)
+        self.processed_image = self.edge.apply_prewitt(self.original_image)
         if self.processed_image is None:
             print("Error: Processed image is None.")
             return  # Prevents crashing
@@ -76,10 +78,10 @@ class MainWindowController:
         if self.original_image is None:
             print("No image loaded. Please upload an image first.")
             return  # Prevents crashing
-        
-        low=self.ui.edge_detection_low_threshold_spinbox.value()
-        high=self.ui.edge_detection_high_threshold_spinbox.value()
-        self.processed_image=self.edge.apply_canny(self.original_image,low,high)
+
+        low = self.ui.edge_detection_low_threshold_spinbox.value()
+        high = self.ui.edge_detection_high_threshold_spinbox.value()
+        self.processed_image = self.edge.apply_canny(self.original_image, low, high)
 
         if self.processed_image is None:
             print("Error: Processed image is None.")
@@ -87,16 +89,17 @@ class MainWindowController:
         ImageServices.clear_image(self.ui.processed_groupBox)
         ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
 
-
     def drawImage(self):
-        self.path = ImageServices.upload_image_file()  
-        self.original_image = cv2.imread(self.path)  # Keep it colored
- 
+        self.path = ImageServices.upload_image_file()
+        self.original_image = cv2.imread(self.path)
+        self.processed_image = self.original_image
+
         # If user cancels file selection, path could be None
         if self.path:
             ImageServices.clear_image(self.ui.original_groupBox)
             ImageServices.clear_image(self.ui.processed_groupBox)
             ImageServices.set_image_in_groupbox(self.ui.original_groupBox, self.original_image)
+            ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
 
     def closeApp(self):
         """Close the application."""

@@ -65,7 +65,7 @@ def createSlider(min_value=0, max_value=100, initial_value=50, unit=None, style=
 
     # Function to update the label based on the slider's value
     def updateLabel(value):
-        label.setText(f"{value}%")
+        label.setText(f"{value}{unit_text}")
 
     # Connect the slider's valueChanged signal to update the label
     slider.valueChanged.connect(updateLabel)
