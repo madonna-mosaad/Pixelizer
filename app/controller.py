@@ -20,6 +20,8 @@ class MainWindowController:
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self.MainWindow)
 
+        self.srv = ImageServices()
+
         self.edge = EdgeDetection()
 
         # Connect signals to slots
@@ -34,6 +36,9 @@ class MainWindowController:
         """Connect buttons to their respective methods."""
         self.ui.quit_app_button.clicked.connect(self.closeApp)
         self.ui.upload_button.clicked.connect(self.drawImage)
+        self.ui.save_image_button.clicked.connect(lambda: self.srv.save_image(self.processed_image))
+
+        self.ui.reset_image_button.clicked.connect(self.reset_images)
         self.ui.sobel_edge_detection_button.clicked.connect(self.controller_apply_sobel)
         self.ui.roberts_edge_detection_button.clicked.connect(self.controller_apply_roberts)
         self.ui.prewitt_edge_detection_button.clicked.connect(self.controller_apply_prewitt)
@@ -49,8 +54,8 @@ class MainWindowController:
         if self.processed_image is None:
             print("Error: Processed image is None.")
             return  # Prevents crashing
-        ImageServices.clear_image(self.ui.processed_groupBox)
-        ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
+        self.srv.clear_image(self.ui.processed_groupBox)
+        self.srv.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
 
     def controller_apply_roberts(self):
         if self.original_image is None:
@@ -60,8 +65,8 @@ class MainWindowController:
         if self.processed_image is None:
             print("Error: Processed image is None.")
             return  # Prevents crashing
-        ImageServices.clear_image(self.ui.processed_groupBox)
-        ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
+        self.srv.clear_image(self.ui.processed_groupBox)
+        self.srv.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
 
     def controller_apply_prewitt(self):
         if self.original_image is None:
@@ -71,8 +76,8 @@ class MainWindowController:
         if self.processed_image is None:
             print("Error: Processed image is None.")
             return  # Prevents crashing
-        ImageServices.clear_image(self.ui.processed_groupBox)
-        ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
+        self.srv.clear_image(self.ui.processed_groupBox)
+        self.srv.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
 
     def controller_apply_canny(self):
         if self.original_image is None:
@@ -86,20 +91,24 @@ class MainWindowController:
         if self.processed_image is None:
             print("Error: Processed image is None.")
             return  # Prevents crashing
-        ImageServices.clear_image(self.ui.processed_groupBox)
-        ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
+        self.srv.clear_image(self.ui.processed_groupBox)
+        self.srv.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
 
     def drawImage(self):
-        self.path = ImageServices.upload_image_file()
+        self.path = self.srv.upload_image_file()
         self.original_image = cv2.imread(self.path)
         self.processed_image = self.original_image
 
         # If user cancels file selection, path could be None
         if self.path:
-            ImageServices.clear_image(self.ui.original_groupBox)
-            ImageServices.clear_image(self.ui.processed_groupBox)
-            ImageServices.set_image_in_groupbox(self.ui.original_groupBox, self.original_image)
-            ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
+            self.srv.clear_image(self.ui.original_groupBox)
+            self.srv.clear_image(self.ui.processed_groupBox)
+            self.srv.set_image_in_groupbox(self.ui.original_groupBox, self.original_image)
+            self.srv.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
+
+    def reset_images(self):
+        self.srv.clear_image(self.ui.processed_groupBox)
+        self.srv.clear_image(self.ui.original_groupBox)
 
     def closeApp(self):
         """Close the application."""
