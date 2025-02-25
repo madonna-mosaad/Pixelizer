@@ -5,10 +5,11 @@ from PyQt5.QtWidgets import QFileDialog
 
 
 class ImageServices:
-    last_opened_folder = "static/images"
+    def __init__(self):
+        self.last_upload_folder = "static/images"
+        self.last_save_folder = "/"
 
-    @classmethod
-    def upload_image_file(cls):
+    def upload_image_file(self):
         """
         Opens a file dialog for the user to select an image file, and returns the path to the selected file.
         """
@@ -17,15 +18,13 @@ class ImageServices:
             file_path, _ = QFileDialog.getOpenFileName(
                 None,
                 "Select Image File",
-                cls.last_opened_folder,
+                self.last_upload_folder,
                 "Image Files (*.png *.jpg *.jpeg *.bmp *.gif);;All Files (*)",
                 options=options
             )
 
-            # If a file is selected, update the last opened folder and return the file path
             if file_path:
-                cls.last_opened_folder = os.path.dirname(file_path)
-                # Show histogram in a pop-up window
+                self.last_upload_folder = os.path.dirname(file_path)
                 return file_path
             else:
                 print("No file was selected.")
@@ -33,102 +32,81 @@ class ImageServices:
         except Exception as e:
             raise Exception(f"An error occurred while uploading the file: {str(e)}")
 
-    # @staticmethod
-    # def set_image_in_groupbox(groupbox, image_path):
-    #     label = QtWidgets.QLabel(groupbox)
-    #     label.setPixmap(QtGui.QPixmap(image_path))
-    #     label.setScaledContents(True)
-    #     label.setMinimumSize(500, 500)
-    #     label.setMaximumSize(groupbox.size())
-
-    #     layout = groupbox.layout()
-    #     if layout is None:
-    #         # If the groupbox has no layout, create one and assign it
-    #         layout = QtWidgets.QVBoxLayout(groupbox)
-    #         groupbox.setLayout(layout)
-
-    #     layout.addWidget(label)
-    #     layout.setContentsMargins(0, 25, 0, 0)
-    #     layout.setAlignment(QtCore.Qt.AlignCenter)
-
-    @staticmethod
-    def set_image_in_groupbox(groupbox, image):
+    def save_image(self, image, file_format='PNG'):
         """
-        Sets the given image (NumPy array) inside a group box.
+        Opens a file dialog for the user to choose a save location and file name, then saves the image.
 
         Args:
-            groupbox (QtWidgets.QGroupBox): The group box to display the image in.
-            image (numpy.ndarray): The image to be displayed (BGR or grayscale).
+            image (numpy.ndarray): The image to be saved.
+            file_format (str): The format to save the image in (default is 'PNG').
         """
         if image is None:
-            return  # Exit if the image is not valid
+            print("No image to save.")
+            return False
 
-        # Convert image from BGR (OpenCV) to RGB format (Qt expects RGB)
-        if len(image.shape) == 3:  # Color image (Height, Width, 3)
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(
+            None,
+            "Save Image",
+            os.path.join(self.last_save_folder, "Untitled." + file_format.lower()),
+            f"Image Files (*.{file_format.lower()});;All Files (*)",
+            options=options
+        )
+
+        if file_path:
+            if len(image.shape) == 3 and image.shape[2] == 3:
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            cv2.imwrite(file_path, image)
+            self.last_save_folder = os.path.dirname(file_path)
+            print(f"Image successfully saved to {file_path}.")
+            return True
+        else:
+            return False
+        #
+
+    def set_image_in_groupbox(self, groupbox, image):
+        if image is None:
+            return
+
+        if len(image.shape) == 3:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             height, width, channels = image.shape
             bytes_per_line = channels * width
             qimage = QtGui.QImage(image.data, width, height, bytes_per_line, QtGui.QImage.Format.Format_RGB888)
-        else:  # Grayscale image (Height, Width)
+        else:
             height, width = image.shape
             bytes_per_line = width
             qimage = QtGui.QImage(image.data, width, height, bytes_per_line, QtGui.QImage.Format.Format_Grayscale8)
 
-        # Convert QImage to QPixmap
         pixmap = QtGui.QPixmap.fromImage(qimage)
-
-        # Create QLabel and display the image
         label = QtWidgets.QLabel(groupbox)
         label.setPixmap(pixmap)
         label.setScaledContents(True)
         label.setMinimumSize(500, 500)
         label.setMaximumSize(groupbox.size())
 
-        # Set layout if not already present
         layout = groupbox.layout()
         if layout is None:
             layout = QtWidgets.QVBoxLayout(groupbox)
             groupbox.setLayout(layout)
 
-        # Add label to layout
         layout.addWidget(label)
         layout.setContentsMargins(0, 25, 0, 0)
         layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 
-    @staticmethod
-    def clear_image(groupbox):
+    def clear_image(self, groupbox):
         layout = groupbox.layout()
         if layout:
-            ImageServices.__clear_layout(layout)
+            self.__clear_layout(layout)
 
-    @staticmethod
-    def __clear_layout(layout):
-        """
-        Recursively removes widgets and nested layouts from the given layout.
-        """
+    def __clear_layout(self, layout):
         while layout.count():
-            item = layout.takeAt(0)  # Take the item out of the layout
-
+            item = layout.takeAt(0)
             widget = item.widget()
-            if widget is not None:
-                # If it's a widget, schedule it for deletion
+            if widget:
                 widget.deleteLater()
             else:
                 sub_layout = item.layout()
-                if sub_layout is not None:
-                    # If it's a nested layout, recursively clear it
-                    ImageServices.__clear_layout(sub_layout)
-
-            # Here we do NOT call item.deleteLater() because item is a QLayoutItem, not a QWidget
-            # Just let Python clean it up after the fact or do `del item`
+                if sub_layout:
+                    self.__clear_layout(sub_layout)
             del item
-
-    @staticmethod
-    def _clear_sub_layout(layout):
-        while layout.count():
-            item = layout.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
-            elif item.layout():
-                ImageServices._clear_sub_layout(item.layout())
-            item.deleteLater()
