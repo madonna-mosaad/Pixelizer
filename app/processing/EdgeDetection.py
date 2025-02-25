@@ -3,10 +3,6 @@ import numpy as np
 
 
 class EdgeDetection:
-    def __init__(self):
-        self.save_path=None
-        self.roberts=False
-
 
     @staticmethod
     def convolve(image, kernel, roberts=False):
@@ -27,8 +23,6 @@ class EdgeDetection:
     
     @staticmethod
     def apply_sobel(image):
-        if len(image.shape) == 3:  
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY) 
         sobel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
         sobel_y = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
         grad_x = EdgeDetection.convolve(image, sobel_x, True)
@@ -36,9 +30,7 @@ class EdgeDetection:
         return np.sqrt(grad_x**2 + grad_y**2).astype(np.uint8)
  
     @staticmethod
-    def apply_roberts(image):
-        if len(image.shape) == 3: 
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)  
+    def apply_roberts(image): 
         roberts_x = np.array([[1, 0], [0, -1]])
         roberts_y = np.array([[0, 1], [-1, 0]])
         grad_x = EdgeDetection.convolve(image, roberts_x)
@@ -46,9 +38,7 @@ class EdgeDetection:
         return np.sqrt(grad_x**2 + grad_y**2).astype(np.uint8)
     
     @staticmethod
-    def apply_prewitt(image):
-        if len(image.shape) == 3:  
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)  
+    def apply_prewitt(image): 
         prewitt_x = np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]])
         prewitt_y = np.array([[-1, -1, -1], [0, 0, 0], [1, 1, 1]])
         grad_x = EdgeDetection.convolve(image, prewitt_x)
