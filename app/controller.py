@@ -38,17 +38,17 @@ class MainWindowController:
 
     def controller_apply_sobel(self):
         self.processed_image=self.edge.apply_sobel(self.original_image)
-        ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.path)
+        ImageServices.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
 
 
     def drawImage(self):
-        self.path = ImageServices.upload_image_file()
-        self.original_image = cv2.imread(self.path, cv2.IMREAD_GRAYSCALE)
-
+        self.path = ImageServices.upload_image_file()  
+        self.original_image = cv2.imread(self.path)  # Keep it colored
+ 
         # If user cancels file selection, path could be None
         if self.path:
             ImageServices.clear_image(self.ui.original_groupBox)
-            ImageServices.set_image_in_groupbox(self.ui.original_groupBox, self.path)
+            ImageServices.set_image_in_groupbox(self.ui.original_groupBox, self.original_image)
 
     def closeApp(self):
         """Close the application."""

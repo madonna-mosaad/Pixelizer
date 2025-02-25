@@ -1,4 +1,5 @@
 import os
+import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 from app.services.image_histogram import ImageHistogram
@@ -33,23 +34,68 @@ class ImageServices:
         except Exception as e:
             raise Exception(f"An error occurred while uploading the file: {str(e)}")
 
+    # @staticmethod
+    # def set_image_in_groupbox(groupbox, image_path):
+    #     label = QtWidgets.QLabel(groupbox)
+    #     label.setPixmap(QtGui.QPixmap(image_path))
+    #     label.setScaledContents(True)
+    #     label.setMinimumSize(500, 500)
+    #     label.setMaximumSize(groupbox.size())
+
+    #     layout = groupbox.layout()
+    #     if layout is None:
+    #         # If the groupbox has no layout, create one and assign it
+    #         layout = QtWidgets.QVBoxLayout(groupbox)
+    #         groupbox.setLayout(layout)
+
+    #     layout.addWidget(label)
+    #     layout.setContentsMargins(0, 25, 0, 0)
+    #     layout.setAlignment(QtCore.Qt.AlignCenter)
+
     @staticmethod
-    def set_image_in_groupbox(groupbox, image_path):
+    def set_image_in_groupbox(groupbox, image):
+        """
+        Sets the given image (NumPy array) inside a group box.
+
+        Args:
+            groupbox (QtWidgets.QGroupBox): The group box to display the image in.
+            image (numpy.ndarray): The image to be displayed (BGR or grayscale).
+        """
+        if image is None:
+            return  # Exit if the image is not valid
+
+        # Convert image from BGR (OpenCV) to RGB format (Qt expects RGB)
+        if len(image.shape) == 3:  # Color image (Height, Width, 3)
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            height, width, channels = image.shape
+            bytes_per_line = channels * width
+            qimage = QtGui.QImage(image.data, width, height, bytes_per_line, QtGui.QImage.Format.Format_RGB888)
+        else:  # Grayscale image (Height, Width)
+            height, width = image.shape
+            bytes_per_line = width
+            qimage = QtGui.QImage(image.data, width, height, bytes_per_line, QtGui.QImage.Format.Format_Grayscale8)
+
+        # Convert QImage to QPixmap
+        pixmap = QtGui.QPixmap.fromImage(qimage)
+
+        # Create QLabel and display the image
         label = QtWidgets.QLabel(groupbox)
-        label.setPixmap(QtGui.QPixmap(image_path))
+        label.setPixmap(pixmap)
         label.setScaledContents(True)
         label.setMinimumSize(500, 500)
         label.setMaximumSize(groupbox.size())
 
+        # Set layout if not already present
         layout = groupbox.layout()
         if layout is None:
-            # If the groupbox has no layout, create one and assign it
             layout = QtWidgets.QVBoxLayout(groupbox)
             groupbox.setLayout(layout)
 
+        # Add label to layout
         layout.addWidget(label)
         layout.setContentsMargins(0, 25, 0, 0)
-        layout.setAlignment(QtCore.Qt.AlignCenter)
+        layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+
 
     @staticmethod
     def clear_image(groupbox):
