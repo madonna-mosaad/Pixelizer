@@ -13,12 +13,15 @@ Pixelizer/
 │   │
 │   ├── design/
 │   │   ├── tools/
-│   │   │   └── design_tools.py
+│   │   │   └── gui_utilities.py
 │   │   │
 │   │   ├── ui/
-│   │   │   └── design.ui
+│   │   │   ├── metrics_graphs.ui
+│   │   │   └── main_layout.ui
 │   │   │
-│   │   └── design.py
+│   │   ├── metrics_graphs.py
+│   │   │
+│   │   └── main_layout.py
 │   │
 │   ├── services/
 │   │   └── image_service.py
@@ -34,7 +37,12 @@ Pixelizer/
     │   └── icon.png
     │
     └── images/
+        ├── cat
+        ├── dog
         ├── image01
         ├── image02
         ├── image03
-        └── image04
+        ├── image04
+        ├── image05
+        ├── image06
+        └── image07

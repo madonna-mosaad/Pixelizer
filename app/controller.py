@@ -1,9 +1,9 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets
 from app.utils.clean_cache import remove_directories
 from app.services.image_service import ImageServices
-from app.design.design import Ui_MainWindow
+from app.design.main_layout import Ui_MainWindow
 from app.processing.EdgeDetection import EdgeDetection
-from app.services.image_histogram import ImageHistogram
+from app.processing.histogram import ImageHistogram
 
 import cv2
 
@@ -44,7 +44,8 @@ class MainWindowController:
         self.ui.prewitt_edge_detection_button.clicked.connect(lambda: self.edge_detection("Prewitt"))
         self.ui.canny_edge_detection_button.clicked.connect(lambda: self.edge_detection("Canny"))
 
-        self.ui.show_metrics_button.clicked.connect(lambda: ImageHistogram.show_histogram_popup(self.path))
+        # self.ui.show_metrics_button.clicked.connect(lambda: ImageHistogram.show_histogram_popup(self.path))
+        self.ui.show_metrics_button.clicked.connect(self.ui.popup.show_popup)
 
     def edge_detection(self, type="Sobel"):
         if self.original_image is None:

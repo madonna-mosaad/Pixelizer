@@ -1,12 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from app.design.tools.design_tools import (
-    createButton,
-    createGroupBox,
-    createSlider,
-    createLabel,
-    createSpinBox,
-    adjust_quit_button
-)
+from app.design.tools.gui_utilities import GUIUtilities
+from app.design.metrics_graphs import Ui_PopWindow
 
 
 class Ui_MainWindow(object):
@@ -16,6 +10,8 @@ class Ui_MainWindow(object):
 
         # 1) Define style variables
         self.setupStyles()
+        self.util = GUIUtilities()
+        self.popup = Ui_PopWindow()
 
         # 2) Apply main window style
         MainWindow.setStyleSheet(self.main_window_style)
@@ -124,7 +120,7 @@ class Ui_MainWindow(object):
         self.title_icon.setScaledContents(True)
         self.title_icon.setObjectName("title_icon")
 
-        self.title_label = createLabel(
+        self.title_label = self.util.createLabel(
             text="Pixelizing",
             style="color:white; padding:10px; padding-left:0;",
             isHead=True
@@ -142,12 +138,12 @@ class Ui_MainWindow(object):
 
     def setupNavbar(self):
         """Creates the Upload, Reset, Save, and Quit buttons."""
-        self.upload_button = createButton("Upload", self.button_style)
-        self.reset_image_button = createButton("Reset", self.button_style)
-        self.save_image_button = createButton("Save", self.button_style)
+        self.upload_button = self.util.createButton("Upload", self.button_style)
+        self.reset_image_button = self.util.createButton("Reset", self.button_style)
+        self.save_image_button = self.util.createButton("Save", self.button_style)
 
-        self.quit_app_button = createButton("X", self.quit_button_style)
-        adjust_quit_button(self.quit_app_button)
+        self.quit_app_button = self.util.createButton("X", self.quit_button_style)
+        self.util.adjust_quit_button(self.quit_app_button)
 
         self.navbar_layout = QtWidgets.QHBoxLayout()
         self.navbar_layout.setSpacing(25)
@@ -267,17 +263,17 @@ class Ui_MainWindow(object):
         Creates the main sidebar buttons list (Noise, Filters, etc.),
         plus sets up references so we can hide them if we want.
         """
-        self.show_noise_options_button = createButton(
+        self.show_noise_options_button = self.util.createButton(
             "Noise", self.button_style, self.show_noise_controls
         )
-        self.show_filter_options_button = createButton("Filters", self.button_style, self.show_filter_controls)
-        self.show_edge_detecting_options_button = createButton("Edge Detector", self.button_style, self.show_edge_detection_controls)
-        self.show_metrics_button = createButton("View Metrics", self.button_style)
-        self.show_refine_options_button = createButton("Refine Image", self.button_style, self.show_refine_image_controls)
-        self.show_threshold_options_button = createButton("Thresholding", self.button_style)
-        self.grayscaling_button = createButton("Gray Scaling", self.button_style)
-        self.show_fourier_filter_options_button = createButton("Fourier Filters", self.button_style, self.show_fourier_filter_controls)
-        self.upload_hybrid_image_button = createButton("Hybrid Image", self.button_style)
+        self.show_filter_options_button = self.util.createButton("Filters", self.button_style, self.show_filter_controls)
+        self.show_edge_detecting_options_button = self.util.createButton("Edge Detector", self.button_style, self.show_edge_detection_controls)
+        self.show_metrics_button = self.util.createButton("View Metrics", self.button_style)
+        self.show_refine_options_button = self.util.createButton("Refine Image", self.button_style, self.show_refine_image_controls)
+        self.show_threshold_options_button = self.util.createButton("Thresholding", self.button_style)
+        self.grayscaling_button = self.util.createButton("Gray Scaling", self.button_style)
+        self.show_fourier_filter_options_button = self.util.createButton("Fourier Filters", self.button_style, self.show_fourier_filter_controls)
+        self.upload_hybrid_image_button = self.util.createButton("Hybrid Image", self.button_style)
 
         # We'll store these main buttons in a list if you need to show/hide them
         self.MAIN_BUTTONS = [
@@ -299,58 +295,58 @@ class Ui_MainWindow(object):
         """
 
         # Back button used on the Noise page
-        back_button = createButton("Back", self.button_style, self.show_main_buttons)
+        back_button = self.util.createButton("Back", self.button_style, self.show_main_buttons)
         self.page_noise_layout.addWidget(back_button)
 
         # Noise Mode
-        mode_title = createLabel("Current Mode", isHead=True)
+        mode_title = self.util.createLabel("Current Mode", isHead=True)
         self.page_noise_layout.addWidget(mode_title)
-        self.noise_mode_button = createButton("Uniform Noise", self.button_style, self.toggle_noise_mode)
+        self.noise_mode_button = self.util.createButton("Uniform Noise", self.button_style, self.toggle_noise_mode)
         self.page_noise_layout.addWidget(self.noise_mode_button)
 
         # Uniform Noise
-        uniform_title = createLabel("Uniform Noise", "Color:white;", isVisible=True, isHead=True)
+        uniform_title = self.util.createLabel("Uniform Noise", "Color:white;", isVisible=True, isHead=True)
         self.page_noise_layout.addWidget(uniform_title)
 
-        uniform_label = createLabel("Noise Amount", "Color:white;", isVisible=True)
+        uniform_label = self.util.createLabel("Noise Amount", "Color:white;", isVisible=True)
         self.page_noise_layout.addWidget(uniform_label)
 
         (self.uniform_noise_slider,
          uniform_slider_label,
-         uniform_slider_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
+         uniform_slider_layout) = self.util.createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(uniform_slider_layout)
 
         # Gaussian Noise
-        gaussian_title = createLabel("Gaussian Noise", "Color:white;", isVisible=True, isHead=True)
+        gaussian_title = self.util.createLabel("Gaussian Noise", "Color:white;", isVisible=True, isHead=True)
         self.page_noise_layout.addWidget(gaussian_title)
 
-        mean_label = createLabel("Mean", "Color:white;", isVisible=True)
+        mean_label = self.util.createLabel("Mean", "Color:white;", isVisible=True)
         self.page_noise_layout.addWidget(mean_label)
 
         (self.mean_gaussian_noise_slider,
          mean_slider_label,
-         mean_slider_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
+         mean_slider_layout) = self.util.createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(mean_slider_layout)
 
         # This second label was "Mean" in your original code
-        stddev_label = createLabel("Standard Deviation", "Color:white;", isVisible=True)
+        stddev_label = self.util.createLabel("Standard Deviation", "Color:white;", isVisible=True)
         self.page_noise_layout.addWidget(stddev_label)
 
         (self.stddev_gaussian_noise_slider,
          stddev_val_label,
-         stddev_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
+         stddev_layout) = self.util.createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(stddev_layout)
 
         # Salt & Pepper Noise
-        salt_pepper_noise_title = createLabel("Salt & Pepper Noise", "Color:white;", isVisible=True, isHead=True)
+        salt_pepper_noise_title = self.util.createLabel("Salt & Pepper Noise", "Color:white;", isVisible=True, isHead=True)
         self.page_noise_layout.addWidget(salt_pepper_noise_title)
 
-        salt_pepper_noise_label = createLabel("Noise Amount", "Color:white;", isVisible=True)
+        salt_pepper_noise_label = self.util.createLabel("Noise Amount", "Color:white;", isVisible=True)
         self.page_noise_layout.addWidget(salt_pepper_noise_label)
 
         (self.salt_pepper_noise_slider,
          uniform_slider_label,
-         uniform_slider_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
+         uniform_slider_layout) = self.util.createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(uniform_slider_layout)
 
     def setupFilterWidgets(self):
@@ -358,138 +354,137 @@ class Ui_MainWindow(object):
         Creates the noise widgets (labels, sliders) and places them in page_noise_layout.
         """
         # Back button used on the Filter page
-        back_button = createButton("Back", self.button_style, self.show_main_buttons)
+        back_button = self.util.createButton("Back", self.button_style, self.show_main_buttons)
         self.page_filter_layout.addWidget(back_button)
 
-        kernal_size_label = createLabel("Kernal Size", isHead=True)
+        kernal_size_label = self.util.createLabel("Kernal Size", isHead=True)
         self.page_filter_layout.addWidget(kernal_size_label)
-        self.filter_kernal_size_button = createButton(self.kernal_sizes_array[0], self.button_style, lambda: self.toggle_kernal_size(self.filter_kernal_size_button))
+        self.filter_kernal_size_button = self.util.createButton(self.kernal_sizes_array[0], self.button_style, lambda: self.toggle_kernal_size(self.filter_kernal_size_button))
         self.page_filter_layout.addWidget(self.filter_kernal_size_button)
 
-        average_filter_title = createLabel("Average Filter", "color:white;", isVisible=True, isHead=True)
+        average_filter_title = self.util.createLabel("Average Filter", "color:white;", isVisible=True, isHead=True)
         self.page_filter_layout.addWidget(average_filter_title)
-        self.average_filter_button = createButton("Apply", self.button_style)
+        self.average_filter_button = self.util.createButton("Apply", self.button_style)
         self.page_filter_layout.addWidget(self.average_filter_button)
 
-        gaussian_filter_title = createLabel("Gaussian Filter", "color:white;", isVisible=True, isHead=True)
+        gaussian_filter_title = self.util.createLabel("Gaussian Filter", "color:white;", isVisible=True, isHead=True)
         self.page_filter_layout.addWidget(gaussian_filter_title)
-        gaussian_filter_sigma_label = createLabel("Sigma - σ", "Color:white;", isVisible=True)
+        gaussian_filter_sigma_label = self.util.createLabel("Sigma - σ", "Color:white;", isVisible=True)
         self.page_filter_layout.addWidget(gaussian_filter_sigma_label)
         (self.gaussian_filter_sigma_slider,
          uniform_slider_label,
-         uniform_slider_layout) = createSlider(unit="%", style=self.slider_style, isVisible=True)
+         uniform_slider_layout) = self.util.createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_filter_layout.addLayout(uniform_slider_layout)
-        self.gaussian_filter_apply_button = createButton("Apply", self.button_style)
+        self.gaussian_filter_apply_button = self.util.createButton("Apply", self.button_style)
         self.page_filter_layout.addWidget(self.gaussian_filter_apply_button)
 
-        median_filter_title = createLabel("Median Filter", "color:white;", isVisible=True, isHead=True)
+        median_filter_title = self.util.createLabel("Median Filter", "color:white;", isVisible=True, isHead=True)
         self.page_filter_layout.addWidget(median_filter_title)
-        self.median_filter_button = createButton("Apply", self.button_style)
+        self.median_filter_button = self.util.createButton("Apply", self.button_style)
         self.page_filter_layout.addWidget(self.median_filter_button)
 
     def setupEdgeDetectionWidgets(self):
         """
         Creates the noise widgets (labels, sliders) and places them in page_noise_layout.
         """
-        back_button = createButton("Back", self.button_style, self.show_main_buttons)
+        back_button = self.util.createButton("Back", self.button_style, self.show_main_buttons)
         self.page_edge_detection_layout.addWidget(back_button)
 
         # =========================================================================================================
-        sobel_label = createLabel("Sobel Edge", isHead=True)
+        sobel_label = self.util.createLabel("Sobel Edge", isHead=True)
         self.page_edge_detection_layout.addWidget(sobel_label)
-        self.sobel_edge_detection_button = createButton("Apply", self.button_style)
+        self.sobel_edge_detection_button = self.util.createButton("Apply", self.button_style)
         self.page_edge_detection_layout.addWidget(self.sobel_edge_detection_button)
 
         # =========================================================================================================
-        roberts_label = createLabel("Roberts Edge", isHead=True)
+        roberts_label = self.util.createLabel("Roberts Edge", isHead=True)
         self.page_edge_detection_layout.addWidget(roberts_label)
-        self.roberts_edge_detection_button = createButton("Apply", self.button_style)
+        self.roberts_edge_detection_button = self.util.createButton("Apply", self.button_style)
         self.page_edge_detection_layout.addWidget(self.roberts_edge_detection_button)
 
         # =========================================================================================================
-        canny_label = createLabel("Canny Edge", isHead=True)
+        canny_label = self.util.createLabel("Canny Edge", isHead=True)
         self.page_edge_detection_layout.addWidget(canny_label)
 
-        high_threshold_label = createLabel("High Threshold")
+        high_threshold_label = self.util.createLabel("High Threshold")
         self.page_edge_detection_layout.addWidget(high_threshold_label)
 
         (self.edge_detection_high_threshold_spinbox,
          edge_detection_high_threshold_label,
-         edge_detection_high_threshold_layout) = createSpinBox(0, 100, 50)
+         edge_detection_high_threshold_layout) = self.util.createSpinBox(0, 100, 50)
         self.page_edge_detection_layout.addLayout(edge_detection_high_threshold_layout)
         self.edge_detection_high_threshold_spinbox.valueChanged.connect(self.update_low_threshold)
 
-        low_threshold_label = createLabel("Low Threshold")
+        low_threshold_label = self.util.createLabel("Low Threshold")
         self.page_edge_detection_layout.addWidget(low_threshold_label)
 
         (self.edge_detection_low_threshold_spinbox,
          edge_detection_low_threshold_label,
-         edge_detection_low_threshold_layout) = createSpinBox(0, 100, 50)
+         edge_detection_low_threshold_layout) = self.util.createSpinBox(0, 100, 50)
 
         self.page_edge_detection_layout.addLayout(edge_detection_low_threshold_layout)
         self.edge_detection_low_threshold_spinbox.valueChanged.connect(self.update_high_threshold)
 
-        self.canny_edge_detection_button = createButton("Apply", self.button_style)
+        self.canny_edge_detection_button = self.util.createButton("Apply", self.button_style)
         self.page_edge_detection_layout.addWidget(self.canny_edge_detection_button)
 
         # =========================================================================================================
-        prewitt_label = createLabel("Prewitt Edge", isHead=True)
+        prewitt_label = self.util.createLabel("Prewitt Edge", isHead=True)
         self.page_edge_detection_layout.addWidget(prewitt_label)
-        self.prewitt_edge_detection_button = createButton("Apply", self.button_style)
+        self.prewitt_edge_detection_button = self.util.createButton("Apply", self.button_style)
         self.page_edge_detection_layout.addWidget(self.prewitt_edge_detection_button)
 
     def setupRefineImageWidgets(self):
         """
         Creates the noise widgets (labels, sliders) and places them in page_noise_layout.
         """
-        back_button = createButton("Back", self.button_style, self.show_main_buttons)
+        back_button = self.util.createButton("Back", self.button_style, self.show_main_buttons)
         self.page_refine_image_layout.addWidget(back_button)
 
         # =========================================================================================================
-        normalize_label = createLabel("Normalize", isHead=True)
+        normalize_label = self.util.createLabel("Normalize", isHead=True)
         self.page_refine_image_layout.addWidget(normalize_label)
-        self.normalize_image_button = createButton("Apply", self.button_style)
+        self.normalize_image_button = self.util.createButton("Apply", self.button_style)
         self.page_refine_image_layout.addWidget(self.normalize_image_button)
 
         # =========================================================================================================
-        equalize_label = createLabel("Equalize", isHead=True)
+        equalize_label = self.util.createLabel("Equalize", isHead=True)
         self.page_refine_image_layout.addWidget(equalize_label)
-        self.equalize_image_button = createButton("Apply", self.button_style)
+        self.equalize_image_button = self.util.createButton("Apply", self.button_style)
         self.page_refine_image_layout.addWidget(self.equalize_image_button)
 
         # =========================================================================================================
-        label01 = createLabel("", isHead=True)
+        label01 = self.util.createLabel("", isHead=True)
         self.page_refine_image_layout.addWidget(label01)
-        label02 = createLabel("", isHead=True)
+        label02 = self.util.createLabel("", isHead=True)
         self.page_refine_image_layout.addWidget(label02)
-
 
     def setupFourierFilterWidgets(self):
         """
         Creates the noise widgets (labels, sliders) and places them in page_noise_layout.
         """
-        back_button = createButton("Back", self.button_style, self.show_main_buttons)
+        back_button = self.util.createButton("Back", self.button_style, self.show_main_buttons)
         self.page_fourier_filter_layout.addWidget(back_button)
 
         # =========================================================================================================
-        pass_filter_label = createLabel("Current Pass Filter", isHead=True)
+        pass_filter_label = self.util.createLabel("Current Pass Filter", isHead=True)
         self.page_fourier_filter_layout.addWidget(pass_filter_label)
-        self.pass_filter_button = createButton("High Pass Filter", self.button_style, self.toggle_pass_filter)
+        self.pass_filter_button = self.util.createButton("High Pass Filter", self.button_style, self.toggle_pass_filter)
         self.page_fourier_filter_layout.addWidget(self.pass_filter_button)
 
         # =========================================================================================================
-        raduis_control_title = createLabel("Raduis Control", isHead=True)
+        raduis_control_title = self.util.createLabel("Raduis Control", isHead=True)
         self.page_fourier_filter_layout.addWidget(raduis_control_title)
         (self.raduis_control_slider,
          raduis_control_label,
-         raduis_control_layout) = createSlider(0, 100, 50, "%", self.slider_style, )
+         raduis_control_layout) = self.util.createSlider(0, 100, 50, "%", self.slider_style, )
         self.page_fourier_filter_layout.addLayout(raduis_control_layout)
 
-        label01 = createLabel("", isHead=True)
+        label01 = self.util.createLabel("", isHead=True)
         self.page_fourier_filter_layout.addWidget(label01)
-        label02 = createLabel("", isHead=True)
+        label02 = self.util.createLabel("", isHead=True)
         self.page_fourier_filter_layout.addWidget(label02)
-        label03 = createLabel("", isHead=True)
+        label03 = self.util.createLabel("", isHead=True)
         self.page_fourier_filter_layout.addWidget(label03)
 
     def toggle_noise_mode(self):
@@ -522,15 +517,17 @@ class Ui_MainWindow(object):
 
     def setupImageGroupBoxes(self):
         """Creates two group boxes: Original Image & Processed Image."""
-        self.original_groupBox = createGroupBox(
+        self.original_groupBox, _ = self.util.createGroupBox(
             title="Original Image",
             size=QtCore.QSize(502, 526),
-            style=self.groupbox_style
+            style=self.groupbox_style,
+            isGraph=False
         )
-        self.processed_groupBox = createGroupBox(
+        self.processed_groupBox, _ = self.util.createGroupBox(
             title="Processed Image",
             size=QtCore.QSize(502, 526),
-            style=self.groupbox_style
+            style=self.groupbox_style,
+            isGraph=False
         )
 
     def update_high_threshold(self, low_threshold_value):
