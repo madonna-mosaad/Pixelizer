@@ -2,9 +2,9 @@ from PyQt5 import QtWidgets
 from app.utils.clean_cache import remove_directories
 from app.services.image_service import ImageServices
 from app.design.main_layout import Ui_MainWindow
-from app.processing.EdgeDetection import EdgeDetection
+from app.processing.edge_detection import EdgeDetection
 from app.processing.histogram import ImageHistogram
-from app.processing.Noise import AddingNoise
+from app.processing.noise_amount import AddingNoise
 
 import cv2
 

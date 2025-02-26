@@ -6,9 +6,9 @@ Pixelizer/
 │   ├── controller.py
 │   │
 │   ├── processing/
-│   │   ├── image_processing.py
+│   │   ├── edge_detection.py
 │   │   ├── histogram.py
-│   │   ├── thresholding.py
+│   │   ├── noise_amount.py
 │   │   └── hybrid_image.py
 │   │
 │   ├── design/
