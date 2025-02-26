@@ -5,8 +5,8 @@ from app.design.metrics_graphs import Ui_PopWindow
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        screen = QtWidgets.QApplication.primaryScreen().size()
-        MainWindow.resize(screen.width(), screen.height())
+        self.screen_size = QtWidgets.QApplication.primaryScreen().size()
+        MainWindow.resize(self.screen_size.width(), self.screen_size.height())
 
         # 1) Define style variables
         self.setupStyles()
@@ -321,7 +321,7 @@ class Ui_MainWindow(object):
 
         (self.mean_gaussian_noise_slider,
          mean_slider_label,
-         mean_slider_layout) = self.util.createSlider(unit="%", style=self.slider_style, isVisible=True)
+         mean_slider_layout) = self.util.createSlider(min_value=-5, max_value=5, initial_value=0, style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(mean_slider_layout)
 
         # This second label was "Mean" in your original code
@@ -330,7 +330,7 @@ class Ui_MainWindow(object):
 
         (self.stddev_gaussian_noise_slider,
          stddev_val_label,
-         stddev_layout) = self.util.createSlider(unit="%", style=self.slider_style, isVisible=True)
+         stddev_layout) = self.util.createSlider(min_value=0, max_value=10, initial_value=5, style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(stddev_layout)
 
         self.gaussian_noise_button = self.util.createButton("Apply", self.button_style)
@@ -512,13 +512,13 @@ class Ui_MainWindow(object):
         """Creates two group boxes: Original Image & Processed Image."""
         self.original_groupBox, _ = self.util.createGroupBox(
             title="Original Image",
-            size=QtCore.QSize(502, 526),
+            size=QtCore.QSize(int(self.screen_size.width() * (502 / 1280)), int(self.screen_size.height() * (526 / 800))),
             style=self.groupbox_style,
             isGraph=False
         )
         self.processed_groupBox, _ = self.util.createGroupBox(
             title="Processed Image",
-            size=QtCore.QSize(502, 526),
+            size=QtCore.QSize(int(self.screen_size.width() * (502 / 1280)), int(self.screen_size.height() * (526 / 800))),
             style=self.groupbox_style,
             isGraph=False
         )

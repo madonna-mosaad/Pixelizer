@@ -46,7 +46,7 @@ class MainWindowController:
         self.ui.roberts_edge_detection_button.clicked.connect(lambda: self.edge_detection("Roberts"))
         self.ui.prewitt_edge_detection_button.clicked.connect(lambda: self.edge_detection("Prewitt"))
         self.ui.canny_edge_detection_button.clicked.connect(lambda: self.edge_detection("Canny"))
-        
+
         self.ui.uniform_noise_button.clicked.connect(lambda: self.apply_noise("Uniform"))
         self.ui.gaussian_noise_button.clicked.connect(lambda: self.apply_noise("Gaussian"))
         self.ui.salt_pepper_noise_button.clicked.connect(lambda: self.apply_noise("Salt&Pepper"))
@@ -58,18 +58,18 @@ class MainWindowController:
         if self.original_image is None:
             print("No image loaded. Please upload an image first.")
             return  # Prevents crashing
-      
-        if type=="Uniform":
-            amount=self.ui.uniform_noise_slider.value()/100
+
+        if type == "Uniform":
+            amount = self.ui.uniform_noise_slider.value() / 100
             print(amount)
-            self.processed_image = self.noise.add_uniform_noise(self.original_image,amount)
-        elif type=="Gaussian":
-            mean=self.ui.mean_gaussian_noise_slider.value()
-            stdev=self.ui.stddev_gaussian_noise_slider.value()
-            self.processed_image = self.noise.add_gaussian_noise(self.original_image,0,6*50)
-        elif type=="Salt&Pepper":
-            amount=self.ui.salt_pepper_noise_slider.value()/100
-            self.processed_image = self.noise.add_salt_and_pepper_noise(self.original_image,amount)
+            self.processed_image = self.noise.add_uniform_noise(self.original_image, amount)
+        elif type == "Gaussian":
+            mean = self.ui.mean_gaussian_noise_slider.value()
+            stdev = self.ui.stddev_gaussian_noise_slider.value()
+            self.processed_image = self.noise.add_gaussian_noise(self.original_image, 0, 6 * 50)
+        elif type == "Salt&Pepper":
+            amount = self.ui.salt_pepper_noise_slider.value() / 100
+            self.processed_image = self.noise.add_salt_and_pepper_noise(self.original_image, amount)
 
         self.showProcessed()
 
@@ -77,23 +77,22 @@ class MainWindowController:
         if self.original_image is None:
             print("No image loaded. Please upload an image first.")
             return  # Prevents crashing
-        
-        if len(self.original_image.shape) == 3: 
-            self.original_image = cv2.cvtColor(self.original_image, cv2.COLOR_RGB2GRAY) 
-        
-        if type=="Sobel":
+
+        if len(self.original_image.shape) == 3:
+            self.original_image = cv2.cvtColor(self.original_image, cv2.COLOR_RGB2GRAY)
+
+        if type == "Sobel":
             self.processed_image = self.edge.apply_sobel(self.original_image)
-        elif type=="Roberts":
+        elif type == "Roberts":
             self.processed_image = self.edge.apply_roberts(self.original_image)
-        elif type=="Prewitt":
+        elif type == "Prewitt":
             self.processed_image = self.edge.apply_prewitt(self.original_image)
-        elif type=="Canny":
+        elif type == "Canny":
             low = self.ui.edge_detection_low_threshold_spinbox.value()
             high = self.ui.edge_detection_high_threshold_spinbox.value()
             self.processed_image = self.edge.apply_canny(self.original_image, low, high)
-        
-        self.showProcessed()
 
+        self.showProcessed()
 
     def drawImage(self):
         self.path = self.srv.upload_image_file()
@@ -115,7 +114,7 @@ class MainWindowController:
         if self.processed_image is None:
             print("Error: Processed image is None.")
             return  # Prevents crashing
-        
+
         self.srv.clear_image(self.ui.processed_groupBox)
         self.srv.set_image_in_groupbox(self.ui.processed_groupBox, self.processed_image)
 
