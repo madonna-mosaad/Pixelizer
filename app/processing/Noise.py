@@ -11,9 +11,9 @@ class AddingNoise:
         return cv2.convertScaleAbs(noisy_image)
 
     @staticmethod
-    def add_gaussian_noise(image, mean=0.0, std_dev=0.5):  
-        mean = int(mean * 100)  # Scale mean slider value to range (-50 to 50)
-        sigma = int(std_dev * 50)  # Scale standard deviation to range (0-50)
+    def add_gaussian_noise(image, mean=0.0, sigma=0.5):  
+        # mean = int(mean * 100)  # Scale mean slider value to range (-50 to 50)
+        # sigma = int(std_dev * 50)  # Scale standard deviation to range (0-50)
         
         gaussian = np.random.normal(mean, sigma, image.shape).astype(np.int16)
         noisy_image = cv2.add(image.astype(np.int16), gaussian)

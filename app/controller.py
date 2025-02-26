@@ -66,7 +66,7 @@ class MainWindowController:
         elif type=="Gaussian":
             mean=self.ui.mean_gaussian_noise_slider.value()
             stdev=self.ui.stddev_gaussian_noise_slider.value()
-            self.processed_image = self.noise.add_gaussian_noise(self.original_image,0,2)
+            self.processed_image = self.noise.add_gaussian_noise(self.original_image,0,6*50)
         elif type=="Salt&Pepper":
             amount=self.ui.salt_pepper_noise_slider.value()/100
             self.processed_image = self.noise.add_salt_and_pepper_noise(self.original_image,amount)
