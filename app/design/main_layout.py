@@ -298,12 +298,6 @@ class Ui_MainWindow(object):
         back_button = self.util.createButton("Back", self.button_style, self.show_main_buttons)
         self.page_noise_layout.addWidget(back_button)
 
-        # Noise Mode
-        mode_title = self.util.createLabel("Current Mode", isHead=True)
-        self.page_noise_layout.addWidget(mode_title)
-        self.noise_mode_button = self.util.createButton("Uniform Noise", self.button_style, self.toggle_noise_mode)
-        self.page_noise_layout.addWidget(self.noise_mode_button)
-
         # Uniform Noise
         uniform_title = self.util.createLabel("Uniform Noise", "Color:white;", isVisible=True, isHead=True)
         self.page_noise_layout.addWidget(uniform_title)
@@ -315,6 +309,8 @@ class Ui_MainWindow(object):
          uniform_slider_label,
          uniform_slider_layout) = self.util.createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(uniform_slider_layout)
+        self.uniform_noise_button = self.util.createButton("Apply", self.button_style)
+        self.page_noise_layout.addWidget(self.uniform_noise_button)
 
         # Gaussian Noise
         gaussian_title = self.util.createLabel("Gaussian Noise", "Color:white;", isVisible=True, isHead=True)
@@ -337,6 +333,9 @@ class Ui_MainWindow(object):
          stddev_layout) = self.util.createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(stddev_layout)
 
+        self.gaussian_noise_button = self.util.createButton("Apply", self.button_style)
+        self.page_noise_layout.addWidget(self.gaussian_noise_button)
+
         # Salt & Pepper Noise
         salt_pepper_noise_title = self.util.createLabel("Salt & Pepper Noise", "Color:white;", isVisible=True, isHead=True)
         self.page_noise_layout.addWidget(salt_pepper_noise_title)
@@ -348,6 +347,8 @@ class Ui_MainWindow(object):
          uniform_slider_label,
          uniform_slider_layout) = self.util.createSlider(unit="%", style=self.slider_style, isVisible=True)
         self.page_noise_layout.addLayout(uniform_slider_layout)
+        self.salt_pepper_noise_button = self.util.createButton("Apply", self.button_style)
+        self.page_noise_layout.addWidget(self.salt_pepper_noise_button)
 
     def setupFilterWidgets(self):
         """
@@ -486,14 +487,6 @@ class Ui_MainWindow(object):
         self.page_fourier_filter_layout.addWidget(label02)
         label03 = self.util.createLabel("", isHead=True)
         self.page_fourier_filter_layout.addWidget(label03)
-
-    def toggle_noise_mode(self):
-        if self.noise_mode_button.text() == "Uniform Noise":
-            self.noise_mode_button.setText("Gaussian Noise")
-        elif self.noise_mode_button.text() == "Gaussian Noise":
-            self.noise_mode_button.setText("Salt & Pepper Noise")
-        else:
-            self.noise_mode_button.setText("Uniform Noise")
 
     def toggle_kernal_size(self, kernal_button):
         """
