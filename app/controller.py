@@ -46,24 +46,30 @@ class MainWindowController:
         self.ui.roberts_edge_detection_button.clicked.connect(lambda: self.edge_detection("Roberts"))
         self.ui.prewitt_edge_detection_button.clicked.connect(lambda: self.edge_detection("Prewitt"))
         self.ui.canny_edge_detection_button.clicked.connect(lambda: self.edge_detection("Canny"))
-        self.ui.noise_mode_button.clicked.connect(self.add_noise)
+        
+        self.ui.uniform_noise_button.clicked.connect(lambda: self.apply_noise("Uniform"))
+        self.ui.gaussian_noise_button.clicked.connect(lambda: self.apply_noise("Gaussian"))
+        self.ui.salt_pepper_noise_button.clicked.connect(lambda: self.apply_noise("Salt&Pepper"))
 
         # self.ui.show_metrics_button.clicked.connect(lambda: ImageHistogram.show_histogram_popup(self.path))
         self.ui.show_metrics_button.clicked.connect(self.ui.popup.show_popup)
 
-    def add_noise(self):
+    def apply_noise(self, type="Uniform"):
         if self.original_image is None:
             print("No image loaded. Please upload an image first.")
             return  # Prevents crashing
-        
-        type=self.ui.noise_mode_button.text()
-        
-        if type=="Uniform Noise":
-            self.processed_image = self.noise.add_uniform_noise(self.original_image)
-        elif type=="Gaussian Noise":
-            self.processed_image = self.noise.add_gaussian_noise(self.original_image)
-        elif type=="Salt & Pepper Noise":
-            self.processed_image = self.noise.add_salt_and_pepper_noise(self.original_image)
+      
+        if type=="Uniform":
+            amount=self.ui.uniform_noise_slider.value()/100
+            print(amount)
+            self.processed_image = self.noise.add_uniform_noise(self.original_image,amount)
+        elif type=="Gaussian":
+            mean=self.ui.mean_gaussian_noise_slider.value()
+            stdev=self.ui.stddev_gaussian_noise_slider.value()
+            self.processed_image = self.noise.add_gaussian_noise(self.original_image,0,2)
+        elif type=="Salt&Pepper":
+            amount=self.ui.salt_pepper_noise_slider.value()/100
+            self.processed_image = self.noise.add_salt_and_pepper_noise(self.original_image,amount)
 
         self.showProcessed()
 
