@@ -5,6 +5,9 @@ from app.design.main_layout import Ui_MainWindow
 from app.processing.edge_detection import EdgeDetection
 from app.processing.histogram import ImageHistogram
 from app.processing.noise_amount import AddingNoise
+from app.processing.histogram_equalization import EqualizeHistogram
+from app.processing.image_normalization import ImageNormalization
+
 
 import cv2
 
@@ -25,6 +28,9 @@ class MainWindowController:
 
         self.edge = EdgeDetection()
         self.noise = AddingNoise()
+
+        self.equalize=EqualizeHistogram()
+        self.normalize =ImageNormalization()
 
         # Connect signals to slots
         self.setupConnections()
@@ -53,6 +59,10 @@ class MainWindowController:
 
         # self.ui.show_metrics_button.clicked.connect(lambda: ImageHistogram.show_histogram_popup(self.path))
         self.ui.show_metrics_button.clicked.connect(self.ui.popup.show_popup)
+
+        self.ui.equalize_image_button.clicked.connect(self.equalize_image)
+
+        self.ui.normalize_image_button.clicked.connect(self.normalize_image)
 
     def apply_noise(self, type="Uniform"):
         if self.original_image is None:
@@ -92,6 +102,41 @@ class MainWindowController:
             high = self.ui.edge_detection_high_threshold_spinbox.value()
             self.processed_image = self.edge.apply_canny(self.original_image, low, high)
 
+        self.showProcessed()
+
+    def normalize_image(self):
+        """Apply normalization to the original image."""
+        # Convert to grayscale if the image is in color
+        if len(self.original_image.shape) == 3:
+            gray_image = cv2.cvtColor(self.original_image, cv2.COLOR_BGR2GRAY)
+        else:
+            gray_image = self.original_image
+
+        img_normalized = self.normalize.normalize_image(gray_image)
+        # Update processed image with the equalized image
+        self.processed_image = img_normalized
+
+        # Show the processed image
+        self.showProcessed()
+    def equalize_image(self):
+        """Apply histogram equalization to the original image."""
+        if self.original_image is None:
+            print("No processed image available for equalization.")
+            return
+
+        # Convert to grayscale if the image is in color
+        if len(self.original_image.shape) == 3:
+            gray_image = cv2.cvtColor(self.original_image, cv2.COLOR_BGR2GRAY)
+        else:
+            gray_image = self.original_image
+
+        # Apply histogram equalization
+        equalized_image = self.equalize.equalizeHist(gray_image)
+
+        # Update processed image with the equalized image
+        self.processed_image = equalized_image
+
+        # Show the processed image
         self.showProcessed()
 
     def drawImage(self):
